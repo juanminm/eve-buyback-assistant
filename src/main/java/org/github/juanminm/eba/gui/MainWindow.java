@@ -25,6 +25,13 @@ import org.github.juanminm.eba.helpers.AppraisalHelper;
 import org.github.juanminm.eba.helpers.AppraisalHelper.EveApraisalMethod;
 import org.github.juanminm.eba.helpers.JTableHelper;
 import org.github.juanminm.eba.vo.Item;
+import javax.swing.JLabel;
+import java.awt.Insets;
+import javax.swing.JComboBox;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import java.awt.Dimension;
+import javax.swing.DefaultComboBoxModel;
 
 public class MainWindow {
     private final String EVEPRAISAL_URL = "evepraisalURL";
@@ -53,14 +60,25 @@ public class MainWindow {
     private JRadioButton evepraisalURLRadio;
     private JTextField evepraissalURLInput;
     private JFrame mainFrame;
-    private JPanel panel;
-    private JPanel panel_1;
+    private JPanel parametersPanel;
+    private JPanel outputPanel;
     private JButton submitBtn;
-    private JTable excludedFromBuybackTable;
-    private JScrollPane scrollPane;
+    private JTable itemListTable;
+    private JScrollPane itemListTableScroll;
     private JMenuBar menuBar;
     private JMenu mnFile;
     private JMenuItem mntmExit;
+    private final ButtonGroup listItemToShowBGroup = new ButtonGroup();
+    private JComboBox<String> marketCBox;
+    private JLabel marketLbl;
+    private JLabel listOfItemsLbl;
+    private JLabel pricePercentLbl;
+    private JSpinner pricePercentSp;
+    private JRadioButton inBuybackRb;
+    private JLabel sellBuyMarginLbl;
+    private JSpinner sellBuyMarginSp;
+    private JRadioButton sellOrderRb;
+    private boolean showBuybackList = true;
 
     /**
      * Create the application.
@@ -76,7 +94,7 @@ public class MainWindow {
         mainFrame = new JFrame();
         mainFrame.setTitle("EVE Buyback Assistant");
         mainFrame.setResizable(false);
-        mainFrame.setBounds(100, 100, 823, 557);
+        mainFrame.setBounds(100, 100, 823, 650);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.getContentPane().setLayout(null);
 
@@ -126,15 +144,18 @@ public class MainWindow {
         assetsPasteInput.setEnabled(false);
         assetsPasteScrollPanel.setViewportView(assetsPasteInput);
 
-        panel = new JPanel();
-        panel.setBounds(10, 215, 797, 23);
-        mainFrame.getContentPane().add(panel);
-        GridBagLayout gbl_panel = new GridBagLayout();
-        gbl_panel.columnWidths = new int[] { 797, 0 };
-        gbl_panel.rowHeights = new int[] { 20, 0 };
-        gbl_panel.columnWeights = new double[] { 0.0, Double.MIN_VALUE };
-        gbl_panel.rowWeights = new double[] { 0.0, Double.MIN_VALUE };
-        panel.setLayout(gbl_panel);
+        parametersPanel = new JPanel();
+        parametersPanel.setBounds(10, 215, 797, 90);
+        mainFrame.getContentPane().add(parametersPanel);
+        GridBagLayout gbl_parametersPanel = new GridBagLayout();
+        gbl_parametersPanel.columnWidths = new int[] { 0, 61, 75, 132, 96, 0,
+                95, 0 };
+        gbl_parametersPanel.rowHeights = new int[] { 30, 30, 30, 0 };
+        gbl_parametersPanel.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0,
+                0.0, 1.0, 0.0, Double.MIN_VALUE };
+        gbl_parametersPanel.rowWeights = new double[] { 0.0, 0.0, 0.0,
+                Double.MIN_VALUE };
+        parametersPanel.setLayout(gbl_parametersPanel);
 
         submitBtn = new JButton("Submit");
         submitBtn.addActionListener(new ActionListener() {
@@ -152,52 +173,154 @@ public class MainWindow {
                     input = evepraissalURLInput.getText();
                     mode = EveApraisalMethod.GET;
                 }
-                items = AppraisalHelper.getInstance().getWorstMargins(input,
-                        mode);
 
-                JTableHelper.getInstance().fillTable(excludedFromBuybackTable,
-                        items);
+                items = AppraisalHelper.getInstance().getWorstMargins(input,
+                        mode, (String) marketCBox.getSelectedItem(),
+                        (float) pricePercentSp.getValue(),
+                        (float) sellBuyMarginSp.getValue(),
+                        showBuybackList);
+
+                JTableHelper.getInstance().fillTable(itemListTable, items);
             }
         });
+                
+                        sellOrderRb = new JRadioButton("As sell order");
+                        sellOrderRb.setSelected(true);
+                        listItemToShowBGroup.add(sellOrderRb);
+                        sellOrderRb.addActionListener(new ActionListener() {
+                            
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                showBuybackList = false;
+                            }
+                        });
+                        GridBagConstraints gbc_sellOrderRb = new GridBagConstraints();
+                        gbc_sellOrderRb.anchor = GridBagConstraints.WEST;
+                        gbc_sellOrderRb.insets = new Insets(0, 0, 5, 5);
+                        gbc_sellOrderRb.gridx = 4;
+                        gbc_sellOrderRb.gridy = 1;
+                        parametersPanel.add(sellOrderRb, gbc_sellOrderRb);
         GridBagConstraints gbc_submitBtn = new GridBagConstraints();
-        gbc_submitBtn.anchor = GridBagConstraints.EAST;
-        gbc_submitBtn.fill = GridBagConstraints.VERTICAL;
-        gbc_submitBtn.gridx = 0;
-        gbc_submitBtn.gridy = 0;
-        panel.add(submitBtn, gbc_submitBtn);
+        gbc_submitBtn.insets = new Insets(0, 0, 5, 0);
+        gbc_submitBtn.fill = GridBagConstraints.BOTH;
+        gbc_submitBtn.gridx = 6;
+        gbc_submitBtn.gridy = 1;
+        parametersPanel.add(submitBtn, gbc_submitBtn);
 
-        panel_1 = new JPanel();
-        panel_1.setBounds(10, 249, 797, 269);
-        mainFrame.getContentPane().add(panel_1);
-        GridBagLayout gbl_panel_1 = new GridBagLayout();
-        gbl_panel_1.columnWidths = new int[] { 286, 0 };
-        gbl_panel_1.rowHeights = new int[] { 114, 0 };
-        gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-        gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
-        panel_1.setLayout(gbl_panel_1);
+        marketLbl = new JLabel("Market");
+        GridBagConstraints gbc_marketLbl = new GridBagConstraints();
+        gbc_marketLbl.anchor = GridBagConstraints.WEST;
+        gbc_marketLbl.insets = new Insets(0, 0, 5, 5);
+        gbc_marketLbl.gridx = 0;
+        gbc_marketLbl.gridy = 0;
+        parametersPanel.add(marketLbl, gbc_marketLbl);
 
-        scrollPane = new JScrollPane();
-        GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-        gbc_scrollPane.fill = GridBagConstraints.BOTH;
-        gbc_scrollPane.gridx = 0;
-        gbc_scrollPane.gridy = 0;
-        panel_1.add(scrollPane, gbc_scrollPane);
+        marketCBox = new JComboBox<>();
+        marketCBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Jita",
+                "Universe", "Amarr", "Dodixie", "Hek", "Rens" }));
+        marketCBox.setSelectedIndex(0);
+        marketLbl.setLabelFor(marketCBox);
+        GridBagConstraints gbc_marketCBox = new GridBagConstraints();
+        gbc_marketCBox.fill = GridBagConstraints.HORIZONTAL;
+        gbc_marketCBox.gridwidth = 2;
+        gbc_marketCBox.insets = new Insets(0, 0, 5, 5);
+        gbc_marketCBox.gridx = 1;
+        gbc_marketCBox.gridy = 0;
+        parametersPanel.add(marketCBox, gbc_marketCBox);
 
-        excludedFromBuybackTable = new JTable();
-        scrollPane.setViewportView(excludedFromBuybackTable);
-        excludedFromBuybackTable.setCellSelectionEnabled(true);
+        listOfItemsLbl = new JLabel("List of items to show");
+        GridBagConstraints gbc_listOfItemsLbl = new GridBagConstraints();
+        gbc_listOfItemsLbl.anchor = GridBagConstraints.WEST;
+        gbc_listOfItemsLbl.insets = new Insets(0, 0, 5, 5);
+        gbc_listOfItemsLbl.gridx = 4;
+        gbc_listOfItemsLbl.gridy = 0;
+        parametersPanel.add(listOfItemsLbl, gbc_listOfItemsLbl);
+
+        pricePercentLbl = new JLabel("Market price percent");
+        GridBagConstraints gbc_pricePercentLbl = new GridBagConstraints();
+        gbc_pricePercentLbl.anchor = GridBagConstraints.WEST;
+        gbc_pricePercentLbl.insets = new Insets(0, 0, 5, 5);
+        gbc_pricePercentLbl.gridx = 0;
+        gbc_pricePercentLbl.gridy = 1;
+        parametersPanel.add(pricePercentLbl, gbc_pricePercentLbl);
+
+        pricePercentSp = new JSpinner();
+        pricePercentSp.setMinimumSize(new Dimension(100, 20));
+        pricePercentSp.setModel(new SpinnerNumberModel(new Float(100),
+                new Float(0), null, new Float(1)));
+        GridBagConstraints gbc_pricePercentSp = new GridBagConstraints();
+        gbc_pricePercentSp.fill = GridBagConstraints.HORIZONTAL;
+        gbc_pricePercentSp.insets = new Insets(0, 0, 5, 5);
+        gbc_pricePercentSp.gridx = 1;
+        gbc_pricePercentSp.gridy = 1;
+        parametersPanel.add(pricePercentSp, gbc_pricePercentSp);
+        pricePercentLbl.setLabelFor(pricePercentSp);
+
+        sellBuyMarginLbl = new JLabel("Sell-buy margin percent");
+        GridBagConstraints gbc_sellBuyMarginLbl = new GridBagConstraints();
+        gbc_sellBuyMarginLbl.insets = new Insets(0, 0, 0, 5);
+        gbc_sellBuyMarginLbl.gridx = 0;
+        gbc_sellBuyMarginLbl.gridy = 2;
+        parametersPanel.add(sellBuyMarginLbl, gbc_sellBuyMarginLbl);
+
+        sellBuyMarginSp = new JSpinner();
+        sellBuyMarginSp.setModel(new SpinnerNumberModel(new Float(100),
+                new Float(0), null, new Float(1)));
+        GridBagConstraints gbc_spinner = new GridBagConstraints();
+        gbc_spinner.fill = GridBagConstraints.HORIZONTAL;
+        gbc_spinner.insets = new Insets(0, 0, 0, 5);
+        gbc_spinner.gridx = 1;
+        gbc_spinner.gridy = 2;
+        parametersPanel.add(sellBuyMarginSp, gbc_spinner);
         
+                inBuybackRb = new JRadioButton("In buyback / Insta-sell");
+                listItemToShowBGroup.add(inBuybackRb);
+                inBuybackRb.addActionListener(new ActionListener() {
+                    
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        showBuybackList = true;
+                    }
+                });
+                GridBagConstraints gbc_inBuybackRb = new GridBagConstraints();
+                gbc_inBuybackRb.anchor = GridBagConstraints.WEST;
+                gbc_inBuybackRb.insets = new Insets(0, 0, 0, 5);
+                gbc_inBuybackRb.gridx = 4;
+                gbc_inBuybackRb.gridy = 2;
+                parametersPanel.add(inBuybackRb, gbc_inBuybackRb);
+
+        outputPanel = new JPanel();
+        outputPanel.setBounds(10, 317, 797, 269);
+        mainFrame.getContentPane().add(outputPanel);
+        GridBagLayout gbl_outputPanel = new GridBagLayout();
+        gbl_outputPanel.columnWidths = new int[] { 286, 0 };
+        gbl_outputPanel.rowHeights = new int[] { 114, 0 };
+        gbl_outputPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+        gbl_outputPanel.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
+        outputPanel.setLayout(gbl_outputPanel);
+
+        itemListTableScroll = new JScrollPane();
+        GridBagConstraints gbc_itemListTableScroll = new GridBagConstraints();
+        gbc_itemListTableScroll.fill = GridBagConstraints.BOTH;
+        gbc_itemListTableScroll.gridx = 0;
+        gbc_itemListTableScroll.gridy = 0;
+        outputPanel.add(itemListTableScroll, gbc_itemListTableScroll);
+
+        itemListTable = new JTable();
+        itemListTableScroll.setViewportView(itemListTable);
+        itemListTable.setCellSelectionEnabled(true);
+
         menuBar = new JMenuBar();
         mainFrame.setJMenuBar(menuBar);
-        
+
         mnFile = new JMenu("File");
         menuBar.add(mnFile);
-        
+
         mntmExit = new JMenuItem("Exit");
         mntmExit.addActionListener(new exitApp());
         mnFile.add(mntmExit);
     }
-    
+
     static class exitApp implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

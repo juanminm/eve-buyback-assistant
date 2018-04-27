@@ -37,14 +37,13 @@ public class AppraisalHelper {
         return aHInstance;
     }
 
-    final String DEFAULT_MARKET = "jita"; // TODO Modifiable
-    final float DEFAULT_MARKET_PERCENTAGE = 1.0f; // Modifiable
     final String DEFAULT_PERSIST_APPRAISAL = "no"; // Modifiable
-    final float SELL_BUY_MARGIN = 1.2f; // TODO Changeable
 
-    public List<Item> getWorstMargins(String input, EveApraisalMethod mode) {
+    public List<Item> getWorstMargins(String input, EveApraisalMethod mode,
+            String market, float pricePercent, float margin,
+            boolean showBuybackList) {
         HttpsURLConnection conn = null;
-        List<Item> excludedItems = new ArrayList<>();
+        List<Item> itemOutputList = new ArrayList<>();
         String jsonResponse = "";
         int responseCode;
         try {
@@ -52,7 +51,7 @@ public class AppraisalHelper {
             if (mode == EveApraisalMethod.GET) {
                 conn = getAppraisal(input);
             } else if (mode == EveApraisalMethod.POST) {
-                conn = createAppraisal(input);
+                conn = createAppraisal(input, market, pricePercent);
             }
 
             if (conn != null) {
@@ -86,12 +85,16 @@ public class AppraisalHelper {
                                 .getMin();
                         double maxBuyPrice = item.getPrices().getBuy().getMax();
 
-                        if (minSellPrice >= maxBuyPrice * SELL_BUY_MARGIN) {
-                            excludedItems.add(item);
+                        if (showBuybackList
+                                && minSellPrice >= maxBuyPrice * margin) {
+                            itemOutputList.add(item);
+                        } else if (!showBuybackList
+                                && minSellPrice < maxBuyPrice * margin) {
+                            itemOutputList.add(item);
                         }
                     }
 
-                    excludedItems.sort(new Comparator<Item>() {
+                    itemOutputList.sort(new Comparator<Item>() {
                         @Override
                         public int compare(Item o1, Item o2) {
                             return o1.getName().compareTo(o2.getName());
@@ -109,14 +112,16 @@ public class AppraisalHelper {
         } catch (IOException e) {
             LOGGER.warning(e.getMessage());
         }
-        return excludedItems;
+        return itemOutputList;
     }
 
-    private HttpsURLConnection createAppraisal(String assetList)
-            throws IOException {
+    private HttpsURLConnection createAppraisal(String assetList, String market,
+            float pricePercent) throws IOException {
         String EVEAPPRAISAL_POST_URL = "https://evepraisal.com/appraisal.json";
-        String urlParameters = "market=" + DEFAULT_MARKET + "&raw_textarea="
-                + assetList + "&persist=" + DEFAULT_PERSIST_APPRAISAL;
+        String urlParameters = String.format(
+                "market=%s&raw_textarea=%s&price_percentage=%s&persist=%s",
+                market.toLowerCase(), assetList, pricePercent,
+                DEFAULT_PERSIST_APPRAISAL);
         URL url;
         byte[] postData;
         int postDataLength;
