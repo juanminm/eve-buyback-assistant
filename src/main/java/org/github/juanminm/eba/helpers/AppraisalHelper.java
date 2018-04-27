@@ -85,11 +85,10 @@ public class AppraisalHelper {
                                 .getMin();
                         double maxBuyPrice = item.getPrices().getBuy().getMax();
 
-                        if (showBuybackList
-                                && minSellPrice >= maxBuyPrice * margin) {
+                        if (!showBuybackList
+                                && minSellPrice >= maxBuyPrice * margin / 100) {
                             itemOutputList.add(item);
-                        } else if (!showBuybackList
-                                && minSellPrice < maxBuyPrice * margin) {
+                        } else if (minSellPrice < maxBuyPrice * margin / 100) {
                             itemOutputList.add(item);
                         }
                     }

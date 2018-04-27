@@ -78,7 +78,7 @@ public class MainWindow {
     private JLabel sellBuyMarginLbl;
     private JSpinner sellBuyMarginSp;
     private JRadioButton sellOrderRb;
-    private boolean showBuybackList = true;
+    private boolean showBuybackList = false;
 
     /**
      * Create the application.
