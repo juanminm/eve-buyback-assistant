@@ -74,7 +74,7 @@ public class MainWindow {
      */
     private void initialize() {
         mainFrame = new JFrame();
-        mainFrame.setTitle("EVE Buyback Apraisal");
+        mainFrame.setTitle("EVE Buyback Assistant");
         mainFrame.setResizable(false);
         mainFrame.setBounds(100, 100, 823, 557);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
