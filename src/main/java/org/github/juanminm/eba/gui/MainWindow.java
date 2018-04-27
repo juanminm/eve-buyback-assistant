@@ -177,29 +177,28 @@ public class MainWindow {
                 items = AppraisalHelper.getInstance().getWorstMargins(input,
                         mode, (String) marketCBox.getSelectedItem(),
                         (float) pricePercentSp.getValue(),
-                        (float) sellBuyMarginSp.getValue(),
-                        showBuybackList);
+                        (float) sellBuyMarginSp.getValue(), showBuybackList);
 
                 JTableHelper.getInstance().fillTable(itemListTable, items);
             }
         });
-                
-                        sellOrderRb = new JRadioButton("As sell order");
-                        sellOrderRb.setSelected(true);
-                        listItemToShowBGroup.add(sellOrderRb);
-                        sellOrderRb.addActionListener(new ActionListener() {
-                            
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                showBuybackList = false;
-                            }
-                        });
-                        GridBagConstraints gbc_sellOrderRb = new GridBagConstraints();
-                        gbc_sellOrderRb.anchor = GridBagConstraints.WEST;
-                        gbc_sellOrderRb.insets = new Insets(0, 0, 5, 5);
-                        gbc_sellOrderRb.gridx = 4;
-                        gbc_sellOrderRb.gridy = 1;
-                        parametersPanel.add(sellOrderRb, gbc_sellOrderRb);
+
+        sellOrderRb = new JRadioButton("As sell order");
+        sellOrderRb.setSelected(true);
+        listItemToShowBGroup.add(sellOrderRb);
+        sellOrderRb.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showBuybackList = false;
+            }
+        });
+        GridBagConstraints gbc_sellOrderRb = new GridBagConstraints();
+        gbc_sellOrderRb.anchor = GridBagConstraints.WEST;
+        gbc_sellOrderRb.insets = new Insets(0, 0, 5, 5);
+        gbc_sellOrderRb.gridx = 4;
+        gbc_sellOrderRb.gridy = 1;
+        parametersPanel.add(sellOrderRb, gbc_sellOrderRb);
         GridBagConstraints gbc_submitBtn = new GridBagConstraints();
         gbc_submitBtn.insets = new Insets(0, 0, 5, 0);
         gbc_submitBtn.fill = GridBagConstraints.BOTH;
@@ -216,8 +215,8 @@ public class MainWindow {
         parametersPanel.add(marketLbl, gbc_marketLbl);
 
         marketCBox = new JComboBox<>();
-        marketCBox.setModel(new DefaultComboBoxModel<String>(new String[] { "Jita",
-                "Universe", "Amarr", "Dodixie", "Hek", "Rens" }));
+        marketCBox.setModel(new DefaultComboBoxModel<String>(new String[] {
+                "Jita", "Universe", "Amarr", "Dodixie", "Hek", "Rens" }));
         marketCBox.setSelectedIndex(0);
         marketLbl.setLabelFor(marketCBox);
         GridBagConstraints gbc_marketCBox = new GridBagConstraints();
@@ -272,22 +271,22 @@ public class MainWindow {
         gbc_spinner.gridx = 1;
         gbc_spinner.gridy = 2;
         parametersPanel.add(sellBuyMarginSp, gbc_spinner);
-        
-                inBuybackRb = new JRadioButton("In buyback / Insta-sell");
-                listItemToShowBGroup.add(inBuybackRb);
-                inBuybackRb.addActionListener(new ActionListener() {
-                    
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        showBuybackList = true;
-                    }
-                });
-                GridBagConstraints gbc_inBuybackRb = new GridBagConstraints();
-                gbc_inBuybackRb.anchor = GridBagConstraints.WEST;
-                gbc_inBuybackRb.insets = new Insets(0, 0, 0, 5);
-                gbc_inBuybackRb.gridx = 4;
-                gbc_inBuybackRb.gridy = 2;
-                parametersPanel.add(inBuybackRb, gbc_inBuybackRb);
+
+        inBuybackRb = new JRadioButton("In buyback / Insta-sell");
+        listItemToShowBGroup.add(inBuybackRb);
+        inBuybackRb.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showBuybackList = true;
+            }
+        });
+        GridBagConstraints gbc_inBuybackRb = new GridBagConstraints();
+        gbc_inBuybackRb.anchor = GridBagConstraints.WEST;
+        gbc_inBuybackRb.insets = new Insets(0, 0, 0, 5);
+        gbc_inBuybackRb.gridx = 4;
+        gbc_inBuybackRb.gridy = 2;
+        parametersPanel.add(inBuybackRb, gbc_inBuybackRb);
 
         outputPanel = new JPanel();
         outputPanel.setBounds(10, 317, 797, 269);
