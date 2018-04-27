@@ -10,6 +10,9 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -55,6 +58,9 @@ public class MainWindow {
     private JButton submitBtn;
     private JTable excludedFromBuybackTable;
     private JScrollPane scrollPane;
+    private JMenuBar menuBar;
+    private JMenu mnFile;
+    private JMenuItem mntmExit;
 
     /**
      * Create the application.
@@ -169,7 +175,7 @@ public class MainWindow {
         gbl_panel_1.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
         gbl_panel_1.rowWeights = new double[] { 1.0, Double.MIN_VALUE };
         panel_1.setLayout(gbl_panel_1);
-        
+
         scrollPane = new JScrollPane();
         GridBagConstraints gbc_scrollPane = new GridBagConstraints();
         gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -180,5 +186,22 @@ public class MainWindow {
         excludedFromBuybackTable = new JTable();
         scrollPane.setViewportView(excludedFromBuybackTable);
         excludedFromBuybackTable.setCellSelectionEnabled(true);
+        
+        menuBar = new JMenuBar();
+        mainFrame.setJMenuBar(menuBar);
+        
+        mnFile = new JMenu("File");
+        menuBar.add(mnFile);
+        
+        mntmExit = new JMenuItem("Exit");
+        mntmExit.addActionListener(new exitApp());
+        mnFile.add(mntmExit);
+    }
+    
+    static class exitApp implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.exit(0);
+        }
     }
 }
