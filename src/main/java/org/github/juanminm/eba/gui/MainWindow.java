@@ -102,7 +102,7 @@ public class MainWindow {
         evepraisalURLRadio.setActionCommand(EVEPRAISAL_URL);
         evepraisalMethodBGroup.add(evepraisalURLRadio);
         evepraisalURLRadio.setSelected(true);
-        evepraisalURLRadio.setBounds(10, 7, 109, 23);
+        evepraisalURLRadio.setBounds(10, 7, 178, 23);
         evepraisalURLRadio.addActionListener(new ActionListener() {
 
             @Override
@@ -125,7 +125,7 @@ public class MainWindow {
         assetsPasteRadio = new JRadioButton("Assets paste");
         assetsPasteRadio.setActionCommand(ASSETS_PASTE);
         evepraisalMethodBGroup.add(assetsPasteRadio);
-        assetsPasteRadio.setBounds(421, 7, 109, 23);
+        assetsPasteRadio.setBounds(421, 7, 233, 23);
         assetsPasteRadio.addActionListener(new ActionListener() {
 
             @Override

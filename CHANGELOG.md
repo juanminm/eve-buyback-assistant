@@ -8,6 +8,7 @@ orders (default) and items to use buyback or instasell.
 
 ### Fixed
 - Main window title as it was using a previous title I though for this project
+- Increase width for the top labels as they were trimmed in Java default style
 
 ## 0.1.0 - 2018-04-26
 - First release!
