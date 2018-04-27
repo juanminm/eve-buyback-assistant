@@ -1,5 +1,5 @@
 # Changelog
-## Unreleased
+## 0.2.0 - 2018-04-27
 ### Added
 - File menu and Exit menu item
 - Evepraisal parameters (market and price percent), a sell-buy margin
