@@ -1,4 +1,9 @@
 # Changelog
+## 0.2.2 - 2018-04-28
+### Fixed
+- Regression from 0.2.1 where a check for showBuybackList was missing making half
+of the list show in the other list too.
+
 ## 0.2.1 - 2018-04-27
 ### Fixed
 - Correctly detecting if it will go to the buyback list or not by fixing the

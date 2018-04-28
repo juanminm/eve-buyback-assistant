@@ -88,7 +88,7 @@ public class AppraisalHelper {
                         if (!showBuybackList
                                 && minSellPrice >= maxBuyPrice * margin / 100) {
                             itemOutputList.add(item);
-                        } else if (minSellPrice < maxBuyPrice * margin / 100) {
+                        } else if (showBuybackList && minSellPrice < maxBuyPrice * margin / 100) {
                             itemOutputList.add(item);
                         }
                     }

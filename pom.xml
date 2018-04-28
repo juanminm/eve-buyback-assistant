@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.github.juanminm.eba</groupId>
 	<artifactId>eve-buyback-assistant</artifactId>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<name>EVE Buyback Assistant</name>
 	<description>A buyback assitant that will give you a list of items whose sell/buy ratio exceeds certain value</description>
 	<properties>
