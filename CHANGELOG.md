@@ -3,8 +3,8 @@
 ### Fixed
 - Correctly detecting if it will go to the buyback list or not by fixing the
 `showBuybackList` value which was reversed.
-- Calculating the correct marging (cleary we don't want to know the 12000% of a
-buy price when inpuyting 120 as margin!)
+- Calculating the correct margin (clearly we don't want to know the 12000% of a
+buy price when inputting 120 as margin!)
 
 ## 0.2.0 - 2018-04-27
 ### Added
