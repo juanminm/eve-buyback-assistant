@@ -15,7 +15,7 @@ public class AppraisalHelper {
         GET, POST
     }
 
-    public static AppraisalHelper aHInstance = null;
+    private static AppraisalHelper appraisalHelper = null;
 
     private static final Logger LOGGER = Logger
             .getLogger(AppraisalHelper.class.getName());

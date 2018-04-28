@@ -6,6 +6,7 @@ the new `getList` method in the newly created `ItemListHelper` class
 - `getWorstMargins` is now called `getEvepraisalJson` and returns a
 String
 - `MainWindow` now handles `getEvepraisalJson` IOException exceptions.
+- Renamed `AppraisalHelper` `aHInstance` to `appraisalHelper`.
 
 ## 0.2.2 - 2018-04-28
 ### Fixed
