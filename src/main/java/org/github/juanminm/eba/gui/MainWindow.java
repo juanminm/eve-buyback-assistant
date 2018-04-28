@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -23,6 +24,7 @@ import javax.swing.JTextField;
 
 import org.github.juanminm.eba.helpers.AppraisalHelper;
 import org.github.juanminm.eba.helpers.AppraisalHelper.EveApraisalMethod;
+import org.github.juanminm.eba.helpers.ItemListHelper;
 import org.github.juanminm.eba.helpers.JTableHelper;
 import org.github.juanminm.eba.vo.Item;
 import javax.swing.JLabel;
@@ -163,6 +165,7 @@ public class MainWindow {
                 String actionCommand = evepraisalMethodBGroup.getSelection()
                         .getActionCommand();
                 String input;
+                String json;
                 EveApraisalMethod mode;
                 List<Item> items;
 
@@ -174,12 +177,21 @@ public class MainWindow {
                     mode = EveApraisalMethod.GET;
                 }
 
-                items = AppraisalHelper.getInstance().getWorstMargins(input,
-                        mode, (String) marketCBox.getSelectedItem(),
-                        (float) pricePercentSp.getValue(),
-                        (float) sellBuyMarginSp.getValue(), showBuybackList);
+                try {
+                    json = AppraisalHelper.getInstance().getEvepraisalJson(input,
+                            mode, (String) marketCBox.getSelectedItem(),
+                            (float) pricePercentSp.getValue());
 
-                JTableHelper.getInstance().fillTable(itemListTable, items);
+                    items = ItemListHelper.getInstance().getItemList(json, mode,
+                            showBuybackList,
+                            (float) sellBuyMarginSp.getValue());
+
+                    JTableHelper.getInstance().fillTable(itemListTable, items);
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+
             }
         });
 

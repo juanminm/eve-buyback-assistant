@@ -6,19 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import org.github.juanminm.eba.vo.Appraisal;
-import org.github.juanminm.eba.vo.Evepraisal;
-import org.github.juanminm.eba.vo.Item;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class AppraisalHelper {
     public static enum EveApraisalMethod {
@@ -31,87 +21,51 @@ public class AppraisalHelper {
             .getLogger(AppraisalHelper.class.getName());
 
     public static AppraisalHelper getInstance() {
-        if (aHInstance == null)
-            aHInstance = new AppraisalHelper();
+        if (appraisalHelper == null)
+            appraisalHelper = new AppraisalHelper();
 
-        return aHInstance;
+        return appraisalHelper;
     }
 
     final String DEFAULT_PERSIST_APPRAISAL = "no"; // Modifiable
 
-    public List<Item> getWorstMargins(String input, EveApraisalMethod mode,
-            String market, float pricePercent, float margin,
-            boolean showBuybackList) {
+    public String getEvepraisalJson(String input, EveApraisalMethod mode,
+            String market, float pricePercent) throws IOException {
         HttpsURLConnection conn = null;
-        List<Item> itemOutputList = new ArrayList<>();
         String jsonResponse = "";
         int responseCode;
-        try {
-            LOGGER.info("Establishing connection to Evepraisal...");
-            if (mode == EveApraisalMethod.GET) {
-                conn = getAppraisal(input);
-            } else if (mode == EveApraisalMethod.POST) {
-                conn = createAppraisal(input, market, pricePercent);
-            }
 
-            if (conn != null) {
-                Gson gson = new GsonBuilder().create();
-                BufferedReader in;
-                List<Item> items;
-                String line;
+        LOGGER.info("Establishing connection to Evepraisal...");
+        if (mode == EveApraisalMethod.GET) {
+            conn = getAppraisal(input);
+        } else if (mode == EveApraisalMethod.POST) {
+            conn = createAppraisal(input, market, pricePercent);
+        }
 
-                responseCode = conn.getResponseCode();
+        if (conn != null) {
+            BufferedReader in;
+            String line;
 
-                if (responseCode == 200) {
-                    Appraisal appraisal;
+            responseCode = conn.getResponseCode();
 
-                    in = new BufferedReader(
-                            new InputStreamReader(conn.getInputStream()));
+            if (responseCode == 200) {
+                in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()));
 
-                    while ((line = in.readLine()) != null) {
-                        jsonResponse += line;
-                    }
-                    LOGGER.info(jsonResponse);
-
-                    appraisal = mode == EveApraisalMethod.GET
-                            ? gson.fromJson(jsonResponse, Appraisal.class)
-                            : gson.fromJson(jsonResponse, Evepraisal.class)
-                                    .getAppraisal();
-
-                    items = appraisal.getItems();
-
-                    for (Item item : items) {
-                        double minSellPrice = item.getPrices().getSell()
-                                .getMin();
-                        double maxBuyPrice = item.getPrices().getBuy().getMax();
-
-                        if (!showBuybackList
-                                && minSellPrice >= maxBuyPrice * margin / 100) {
-                            itemOutputList.add(item);
-                        } else if (showBuybackList && minSellPrice < maxBuyPrice * margin / 100) {
-                            itemOutputList.add(item);
-                        }
-                    }
-
-                    itemOutputList.sort(new Comparator<Item>() {
-                        @Override
-                        public int compare(Item o1, Item o2) {
-                            return o1.getName().compareTo(o2.getName());
-                        }
-                    });
-                } else {
-                    LOGGER.warning(
-                            "Connection to server could not be made. HTTP "
-                                    + responseCode);
+                while ((line = in.readLine()) != null) {
+                    jsonResponse += line;
                 }
+                LOGGER.info(jsonResponse);
 
             } else {
-                LOGGER.warning("Connection has not been established.");
+                LOGGER.warning("Connection to server could not be made. HTTP "
+                        + responseCode);
             }
-        } catch (IOException e) {
-            LOGGER.warning(e.getMessage());
+        } else {
+            LOGGER.warning("Connection has not been established.");
         }
-        return itemOutputList;
+
+        return jsonResponse;
     }
 
     private HttpsURLConnection createAppraisal(String assetList, String market,

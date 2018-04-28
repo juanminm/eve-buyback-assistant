@@ -1,4 +1,12 @@
 # Changelog
+## Unreleased
+### Changes
+- Refactorized part of `AppraisalHelper` `getWorstMargins` method to
+the new `getList` method in the newly created `ItemListHelper` class
+- `getWorstMargins` is now called `getEvepraisalJson` and returns a
+String
+- `MainWindow` now handles `getEvepraisalJson` IOException exceptions.
+
 ## 0.2.2 - 2018-04-28
 ### Fixed
 - Regression from 0.2.1 where a check for showBuybackList was missing making half
