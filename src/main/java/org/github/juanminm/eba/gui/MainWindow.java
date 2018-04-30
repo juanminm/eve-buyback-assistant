@@ -1,16 +1,21 @@
 package org.github.juanminm.eba.gui;
 
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -18,22 +23,17 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.github.juanminm.eba.helpers.AppraisalHelper;
 import org.github.juanminm.eba.helpers.AppraisalHelper.EveApraisalMethod;
 import org.github.juanminm.eba.helpers.ItemListHelper;
 import org.github.juanminm.eba.helpers.JTableHelper;
 import org.github.juanminm.eba.vo.Item;
-import javax.swing.JLabel;
-import java.awt.Insets;
-import javax.swing.JComboBox;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import java.awt.Dimension;
-import javax.swing.DefaultComboBoxModel;
 
 public class MainWindow {
     private final String EVEPRAISAL_URL = "evepraisalURL";
