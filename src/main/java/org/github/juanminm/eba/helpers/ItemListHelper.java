@@ -1,6 +1,7 @@
 package org.github.juanminm.eba.helpers;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import org.github.juanminm.eba.helpers.AppraisalHelper.EveApraisalMethod;
@@ -48,7 +49,14 @@ public class ItemListHelper {
                 itemOutputList.add(item);
             }
         }
-        
+
+        itemOutputList.sort(new Comparator<Item>() {
+            @Override
+            public int compare(Item i1, Item i2) {
+                return i1.getName().compareTo(i2.getName());
+            }
+        });
+
         return itemOutputList;
     }
 }
