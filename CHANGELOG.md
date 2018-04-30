@@ -1,6 +1,7 @@
 # Changelog
 ## Unreleased
 ### Added
+- Tools menu and its child Settings menu item.
 - SettingsDialog with a yet to fill tabbed pane and some working buttons
 
 ## 0.2.2 - 2018-04-28
