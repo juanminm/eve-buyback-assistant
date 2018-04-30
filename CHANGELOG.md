@@ -1,4 +1,8 @@
 # Changelog
+## Unreleased
+### Added
+- SettingsDialog with a yet to fill tabbed pane and some working buttons
+
 ## 0.2.2 - 2018-04-28
 ### Fixed
 - Regression from 0.2.1 where a check for showBuybackList was missing making half
