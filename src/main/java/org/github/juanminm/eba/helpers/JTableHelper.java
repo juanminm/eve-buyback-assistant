@@ -9,13 +9,13 @@ import javax.swing.table.AbstractTableModel;
 import org.github.juanminm.eba.vo.Item;
 
 public class JTableHelper {
-    public static JTableHelper jTHInstance = null;
+    public static JTableHelper jTableHelper = null;
     
     public static JTableHelper getInstance() {
-        if(jTHInstance == null)
-            jTHInstance = new JTableHelper();
-            
-        return jTHInstance;
+        if (jTableHelper == null)
+            jTableHelper = new JTableHelper();
+
+        return jTableHelper;
     }
 
     public void fillTable(JTable excludedFromBuybackTable, List<Item> items) {
