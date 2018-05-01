@@ -10,7 +10,7 @@ import org.github.juanminm.eba.vo.Item;
 
 public class JTableHelper {
     public static JTableHelper jTableHelper = null;
-    
+
     public static JTableHelper getInstance() {
         if (jTableHelper == null)
             jTableHelper = new JTableHelper();
@@ -21,14 +21,14 @@ public class JTableHelper {
     public void fillTable(JTable excludedFromBuybackTable, List<Item> items) {
         excludedFromBuybackTable.setModel(new ItemTableModel(items));
     }
-    
+
 }
 
 class ItemTableModel extends AbstractTableModel {
     private static final long serialVersionUID = 1L;
-    
+
     private List<ItemRow> itemRows = new ArrayList<>();
-    
+
     public ItemTableModel(List<Item> items) {
         for (Item item : items) {
             ItemRow itemrow = new ItemRow(item);
@@ -56,23 +56,24 @@ class ItemTableModel extends AbstractTableModel {
         }
         return null;
     }
-    
+
     @Override
-    public Class<?> getColumnClass(int columnIndex){
-           switch (columnIndex){
-              case 0:
+    public Class<?> getColumnClass(int columnIndex) {
+        switch (columnIndex) {
+            case 0:
                 return String.class;
-              case 1:
+            case 1:
                 return String.class;
-              }
-              return null;
-       }
+        }
+        return null;
+    }
 }
 
 class ItemRow {
     private Item item;
-    private String urlImage = ""; //TODO Get image resource from EVE Online image resources
-    
+    private String urlImage = ""; // TODO Get image resource from EVE Online
+                                  // image resources
+
     public ItemRow(Item item) {
         this.item = item;
     }
@@ -91,5 +92,5 @@ class ItemRow {
 
     public void setUrlImage(String urlImage) {
         this.urlImage = urlImage;
-    }    
+    }
 }

@@ -13,13 +13,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class ItemListHelper {
-    
+
     private static ItemListHelper itemListHelper;
 
     public static ItemListHelper getInstance() {
         if (itemListHelper == null)
             itemListHelper = new ItemListHelper();
-        
+
         return itemListHelper;
     }
 
@@ -32,20 +32,19 @@ public class ItemListHelper {
 
         appraisal = mode == EveApraisalMethod.GET
                 ? gson.fromJson(jsonResponse, Appraisal.class)
-                : gson.fromJson(jsonResponse, Evepraisal.class)
-                        .getAppraisal();
+                : gson.fromJson(jsonResponse, Evepraisal.class).getAppraisal();
 
         items = appraisal.getItems();
 
         for (Item item : items) {
-            double minSellPrice = item.getPrices().getSell()
-                    .getMin();
+            double minSellPrice = item.getPrices().getSell().getMin();
             double maxBuyPrice = item.getPrices().getBuy().getMax();
 
             if (!showBuybackList
                     && minSellPrice >= maxBuyPrice * margin / 100) {
                 itemOutputList.add(item);
-            } else if (showBuybackList && minSellPrice < maxBuyPrice * margin / 100) {
+            } else if (showBuybackList
+                    && minSellPrice < maxBuyPrice * margin / 100) {
                 itemOutputList.add(item);
             }
         }
