@@ -47,7 +47,7 @@ public class SettingsDialog extends JDialog {
 
         okButton = new JButton("OK");
         okButton.addActionListener(e -> {
-            // TODO Save settings
+            saveSettings();
             dispose();
         });
         okButton.setActionCommand("OK");
@@ -63,13 +63,18 @@ public class SettingsDialog extends JDialog {
         applyBtn.setEnabled(false);
         applyBtn.addActionListener(e -> {
             saveSettings();
-            ((JButton) e.getSource()).setEnabled(false);
         });
         buttonPane.add(applyBtn);
     }
 
+    private void enableApplyButton() {
+        applyBtn.setEnabled(true);
+    }
+
     private void saveSettings() {
-        // TODO Save settings
+        //TODO Set each property and save it to a properties file
+        if (applyBtn.isEnabled())
+            applyBtn.setEnabled(false);
     }
 
 }
