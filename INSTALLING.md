@@ -8,7 +8,7 @@ To install it you have two ways, from source or binaries:
 
 ### Requirements
 
-JDK (tested JDK 8)
+JDK 8 or higher
 Maven (tested 3.5.3)
 
 ### Compiling
@@ -31,7 +31,7 @@ The JAR executable and the "libs" folder will be located in the newly-created
 
 ### REquirements
 
-JRE (tested JRE 8)
+JRE 8 or higher
 
 ### Installation
 
