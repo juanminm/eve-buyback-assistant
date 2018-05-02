@@ -1,4 +1,9 @@
 # Changelog
+## Unreleased
+### Changes
+- Replaced anonymous classes with lambdas. The software will now be required
+Java 8 as minimum version.
+
 ## 0.2.2 - 2018-04-28
 ### Fixed
 - Regression from 0.2.1 where a check for showBuybackList was missing making half

@@ -41,14 +41,12 @@ public class MainWindow {
      * Launch the application.
      */
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    MainWindow window = new MainWindow();
-                    window.mainFrame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                MainWindow window = new MainWindow();
+                window.mainFrame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -103,13 +101,9 @@ public class MainWindow {
         evepraisalMethodBGroup.add(evepraisalURLRadio);
         evepraisalURLRadio.setSelected(true);
         evepraisalURLRadio.setBounds(10, 7, 178, 23);
-        evepraisalURLRadio.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                evepraissalURLInput.setEnabled(true);
-                assetsPasteInput.setEnabled(false);
-            }
+        evepraisalURLRadio.addActionListener(e -> {
+            evepraissalURLInput.setEnabled(true);
+            assetsPasteInput.setEnabled(false);
         });
         mainFrame.getContentPane().add(evepraisalURLRadio);
 
@@ -126,13 +120,9 @@ public class MainWindow {
         assetsPasteRadio.setActionCommand(ASSETS_PASTE);
         evepraisalMethodBGroup.add(assetsPasteRadio);
         assetsPasteRadio.setBounds(421, 7, 233, 23);
-        assetsPasteRadio.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                assetsPasteInput.setEnabled(true);
-                evepraissalURLInput.setEnabled(false);
-            }
+        assetsPasteRadio.addActionListener(e -> {
+            assetsPasteInput.setEnabled(true);
+            evepraissalURLInput.setEnabled(false);
         });
         mainFrame.getContentPane().add(assetsPasteRadio);
 
@@ -158,41 +148,33 @@ public class MainWindow {
         parametersPanel.setLayout(gbl_parametersPanel);
 
         submitBtn = new JButton("Submit");
-        submitBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String actionCommand = evepraisalMethodBGroup.getSelection()
-                        .getActionCommand();
-                String input;
-                EveApraisalMethod mode;
-                List<Item> items;
+        submitBtn.addActionListener(e -> {
+            String actionCommand = evepraisalMethodBGroup.getSelection()
+                    .getActionCommand();
+            String input;
+            EveApraisalMethod mode;
+            List<Item> items;
 
-                if (ASSETS_PASTE.equals(actionCommand)) {
-                    input = assetsPasteInput.getText();
-                    mode = EveApraisalMethod.POST;
-                } else {
-                    input = evepraissalURLInput.getText();
-                    mode = EveApraisalMethod.GET;
-                }
-
-                items = AppraisalHelper.getInstance().getWorstMargins(input,
-                        mode, (String) marketCBox.getSelectedItem(),
-                        (float) pricePercentSp.getValue(),
-                        (float) sellBuyMarginSp.getValue(), showBuybackList);
-
-                JTableHelper.getInstance().fillTable(itemListTable, items);
+            if (ASSETS_PASTE.equals(actionCommand)) {
+                input = assetsPasteInput.getText();
+                mode = EveApraisalMethod.POST;
+            } else {
+                input = evepraissalURLInput.getText();
+                mode = EveApraisalMethod.GET;
             }
+
+            items = AppraisalHelper.getInstance().getWorstMargins(input, mode,
+                    (String) marketCBox.getSelectedItem(),
+                    (float) pricePercentSp.getValue(),
+                    (float) sellBuyMarginSp.getValue(), showBuybackList);
+
+            JTableHelper.getInstance().fillTable(itemListTable, items);
         });
 
         sellOrderRb = new JRadioButton("As sell order");
         sellOrderRb.setSelected(true);
         listItemToShowBGroup.add(sellOrderRb);
-        sellOrderRb.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showBuybackList = false;
-            }
-        });
+        sellOrderRb.addActionListener(e -> showBuybackList = false);
         GridBagConstraints gbc_sellOrderRb = new GridBagConstraints();
         gbc_sellOrderRb.anchor = GridBagConstraints.WEST;
         gbc_sellOrderRb.insets = new Insets(0, 0, 5, 5);
@@ -274,13 +256,7 @@ public class MainWindow {
 
         inBuybackRb = new JRadioButton("In buyback / Insta-sell");
         listItemToShowBGroup.add(inBuybackRb);
-        inBuybackRb.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showBuybackList = true;
-            }
-        });
+        inBuybackRb.addActionListener(e -> showBuybackList = true);
         GridBagConstraints gbc_inBuybackRb = new GridBagConstraints();
         gbc_inBuybackRb.anchor = GridBagConstraints.WEST;
         gbc_inBuybackRb.insets = new Insets(0, 0, 0, 5);
