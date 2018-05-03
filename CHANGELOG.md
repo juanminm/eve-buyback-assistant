@@ -2,7 +2,9 @@
 ## Unreleased
 ### Added
 - Tools menu and its child Settings menu item.
-- SettingsDialog with a yet to fill tabbed pane and some working buttons
+- Added SettingsDialog that is called when clicked in Setting menu item. It will
+contain the configuration of the application.
+- Added a ProxyPanel in SettingsDialog.
 
 ## 0.2.2 - 2018-04-28
 ### Fixed
