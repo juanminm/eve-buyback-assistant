@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
@@ -17,7 +18,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.ButtonGroup;
 
 public class SettingsDialog extends JDialog {
 
@@ -72,8 +72,8 @@ public class SettingsDialog extends JDialog {
         gbl_proxyPanel.rowHeights = new int[] { 23, 0, 0, 0, 0, 0, 0, 0 };
         gbl_proxyPanel.columnWeights = new double[] { 0.0, 0.0, 1.0, 0.0, 0.0,
                 Double.MIN_VALUE };
-        gbl_proxyPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
-                Double.MIN_VALUE };
+        gbl_proxyPanel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                1.0, Double.MIN_VALUE };
         proxyPanel.setLayout(gbl_proxyPanel);
 
         noProxyRBtn = new JRadioButton("Without proxy");
