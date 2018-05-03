@@ -11,6 +11,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
@@ -37,7 +38,7 @@ public class SettingsDialog extends JDialog {
     private JLabel usernameLbl;
     private JLabel passwordLbl;
     private JTextField usernameInput;
-    private JTextField passwordInput;
+    private JPasswordField passwordInput;
     private JSpinner portSp;
     private final ButtonGroup proxyBGroup = new ButtonGroup();
 
@@ -171,7 +172,7 @@ public class SettingsDialog extends JDialog {
         gbc_passwordLbl.gridy = 5;
         proxyPanel.add(passwordLbl, gbc_passwordLbl);
 
-        passwordInput = new JTextField();
+        passwordInput = new JPasswordField();
         passwordInput.setEnabled(false);
         passwordLbl.setLabelFor(passwordInput);
         GridBagConstraints gbc_passwordInput = new GridBagConstraints();
