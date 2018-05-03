@@ -18,6 +18,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class SettingsDialog extends JDialog {
 
@@ -87,6 +89,13 @@ public class SettingsDialog extends JDialog {
         gbc_noProxyRBtn.gridx = 0;
         gbc_noProxyRBtn.gridy = 0;
         proxyPanel.add(noProxyRBtn, gbc_noProxyRBtn);
+        noProxyRBtn.addItemListener(e -> enableApplyButton());
+        noProxyRBtn.addActionListener(e -> {
+            hostInput.setEnabled(false);
+            portSp.setEnabled(false);
+            usernameInput.setEnabled(false);
+            passwordInput.setEnabled(false);
+        });
 
         withProxyRBtn = new JRadioButton("With proxy");
         proxyBGroup.add(withProxyRBtn);
@@ -97,6 +106,13 @@ public class SettingsDialog extends JDialog {
         gbc_withProxyRBtn.gridx = 0;
         gbc_withProxyRBtn.gridy = 1;
         proxyPanel.add(withProxyRBtn, gbc_withProxyRBtn);
+        withProxyRBtn.addItemListener(e -> enableApplyButton());
+        withProxyRBtn.addActionListener(e -> {
+            hostInput.setEnabled(true);
+            portSp.setEnabled(true);
+            usernameInput.setEnabled(true);
+            passwordInput.setEnabled(true);
+        });
 
         hostLbl = new JLabel("Host");
         GridBagConstraints gbc_hostLbl = new GridBagConstraints();
@@ -116,6 +132,23 @@ public class SettingsDialog extends JDialog {
         gbc_hostInput.gridy = 2;
         proxyPanel.add(hostInput, gbc_hostInput);
         hostInput.setColumns(10);
+        hostInput.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                enableApplyButton();
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                enableApplyButton();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                enableApplyButton();
+            }
+        });
 
         portLbl = new JLabel("Port");
         GridBagConstraints gbc_portLbl = new GridBagConstraints();
@@ -132,6 +165,9 @@ public class SettingsDialog extends JDialog {
         gbc_portSp.gridx = 4;
         gbc_portSp.gridy = 2;
         proxyPanel.add(portSp, gbc_portSp);
+        portSp.addChangeListener(e -> {
+            enableApplyButton();
+        });
 
         credentialsChk = new JCheckBox("Requires credentials");
         GridBagConstraints gbc_credentialsChk = new GridBagConstraints();
@@ -141,6 +177,17 @@ public class SettingsDialog extends JDialog {
         gbc_credentialsChk.gridx = 0;
         gbc_credentialsChk.gridy = 3;
         proxyPanel.add(credentialsChk, gbc_credentialsChk);
+        credentialsChk.addActionListener(e -> {
+            enableApplyButton();
+
+            if (credentialsChk.isSelected()) {
+                usernameInput.setEnabled(true);
+                passwordInput.setEnabled(true);
+            } else {
+                usernameInput.setEnabled(false);
+                passwordInput.setEnabled(false);
+            }
+        });
 
         usernameLbl = new JLabel("Username");
         GridBagConstraints gbc_usernameLbl = new GridBagConstraints();
@@ -211,7 +258,8 @@ public class SettingsDialog extends JDialog {
     }
 
     private void enableApplyButton() {
-        applyBtn.setEnabled(true);
+        if (!applyBtn.isEnabled())
+            applyBtn.setEnabled(true);
     }
 
     private void saveSettings() {
