@@ -1,4 +1,9 @@
 # Changelog
+## Unreleased
+### Changed
+- Modified from `LOGGER.warn` to `LOGGER.severe` in  AppraisalHelper in
+the logging inside a `catch` block.
+ 
 ## 0.2.2 - 2018-04-28
 ### Fixed
 - Regression from 0.2.1 where a check for showBuybackList was missing making half

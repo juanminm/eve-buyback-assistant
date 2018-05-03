@@ -109,7 +109,7 @@ public class AppraisalHelper {
                 LOGGER.warning("Connection has not been established.");
             }
         } catch (IOException e) {
-            LOGGER.warning(e.getMessage());
+            LOGGER.severe(e.getMessage());
         }
         return itemOutputList;
     }
