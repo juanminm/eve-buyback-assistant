@@ -5,6 +5,10 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -21,8 +25,13 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.github.juanminm.eba.helpers.ProxyHelper;
+import org.github.juanminm.eba.managers.SettingsManager;
+
 public class SettingsDialog extends JDialog {
 
+    private static final Logger LOGGER = Logger
+            .getLogger(SettingsDialog.class.getName());
     private static final long serialVersionUID = 1L;
 
     private JTabbedPane settingTabPane;
@@ -43,6 +52,7 @@ public class SettingsDialog extends JDialog {
     private JPasswordField passwordInput;
     private JSpinner portSp;
     private final ButtonGroup proxyBGroup = new ButtonGroup();
+    private SettingsManager settingsManager = SettingsManager.getInstance();
 
     /**
      * Launch the application.
@@ -80,7 +90,8 @@ public class SettingsDialog extends JDialog {
 
         noProxyRBtn = new JRadioButton("Without proxy");
         proxyBGroup.add(noProxyRBtn);
-        noProxyRBtn.setSelected(true);
+        noProxyRBtn.setSelected(!Boolean.parseBoolean(settingsManager
+                .getProperty(SettingsManager.PROXY_ENABLED, false)));
         GridBagConstraints gbc_noProxyRBtn = new GridBagConstraints();
         gbc_noProxyRBtn.fill = GridBagConstraints.HORIZONTAL;
         gbc_noProxyRBtn.gridwidth = 5;
@@ -91,6 +102,7 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(noProxyRBtn, gbc_noProxyRBtn);
         noProxyRBtn.addItemListener(e -> enableApplyButton());
         noProxyRBtn.addActionListener(e -> {
+            settingsManager.setProperty(SettingsManager.PROXY_ENABLED, false);
             hostInput.setEnabled(false);
             portSp.setEnabled(false);
             usernameInput.setEnabled(false);
@@ -98,6 +110,8 @@ public class SettingsDialog extends JDialog {
         });
 
         withProxyRBtn = new JRadioButton("With proxy");
+        withProxyRBtn.setSelected(Boolean.parseBoolean(settingsManager
+                .getProperty(SettingsManager.PROXY_ENABLED, false)));
         proxyBGroup.add(withProxyRBtn);
         GridBagConstraints gbc_withProxyRBtn = new GridBagConstraints();
         gbc_withProxyRBtn.gridwidth = 5;
@@ -108,6 +122,7 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(withProxyRBtn, gbc_withProxyRBtn);
         withProxyRBtn.addItemListener(e -> enableApplyButton());
         withProxyRBtn.addActionListener(e -> {
+            settingsManager.setProperty(SettingsManager.PROXY_ENABLED, true);
             hostInput.setEnabled(true);
             portSp.setEnabled(true);
             usernameInput.setEnabled(true);
@@ -123,7 +138,10 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(hostLbl, gbc_hostLbl);
 
         hostInput = new JTextField();
+        hostInput.setEnabled(withProxyRBtn.isSelected());
         hostLbl.setLabelFor(hostInput);
+        hostInput.setText(
+                settingsManager.getProperty(SettingsManager.PROXY_HOST, null));
         GridBagConstraints gbc_hostInput = new GridBagConstraints();
         gbc_hostInput.gridwidth = 2;
         gbc_hostInput.fill = GridBagConstraints.HORIZONTAL;
@@ -132,21 +150,16 @@ public class SettingsDialog extends JDialog {
         gbc_hostInput.gridy = 2;
         proxyPanel.add(hostInput, gbc_hostInput);
         hostInput.setColumns(10);
-        hostInput.getDocument().addDocumentListener(new DocumentListener() {
-
+        hostInput.getDocument()
+                .addDocumentListener(new SettingsFieldsListener());
+        hostInput.addFocusListener(new FocusListener() {
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                enableApplyButton();
+            public void focusLost(FocusEvent e) {
+                settingsManager.setProperty("proxy.host", hostInput.getText());
             }
 
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                enableApplyButton();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                enableApplyButton();
+            public void focusGained(FocusEvent e) {
             }
         });
 
@@ -158,18 +171,26 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(portLbl, gbc_portLbl);
 
         portSp = new JSpinner();
+        portSp.setEnabled(withProxyRBtn.isSelected());
         portLbl.setLabelFor(portSp);
-        portSp.setModel(new SpinnerNumberModel(80, 0, 65535, 1));
+        portSp.setModel(new SpinnerNumberModel(
+                Integer.parseInt(settingsManager
+                        .getProperty(SettingsManager.PROXY_PORT, 80)),
+                0, 65535, 1));
         GridBagConstraints gbc_portSp = new GridBagConstraints();
         gbc_portSp.insets = new Insets(0, 0, 5, 0);
         gbc_portSp.gridx = 4;
         gbc_portSp.gridy = 2;
         proxyPanel.add(portSp, gbc_portSp);
         portSp.addChangeListener(e -> {
+            settingsManager.setProperty("proxy.port", (int) portSp.getValue());
             enableApplyButton();
         });
 
         credentialsChk = new JCheckBox("Requires credentials");
+        credentialsChk.setEnabled(withProxyRBtn.isSelected());
+        credentialsChk.setSelected(Boolean.parseBoolean(settingsManager
+                .getProperty(SettingsManager.PROXY_WITH_AUTH, false)));
         GridBagConstraints gbc_credentialsChk = new GridBagConstraints();
         gbc_credentialsChk.anchor = GridBagConstraints.WEST;
         gbc_credentialsChk.gridwidth = 5;
@@ -178,15 +199,19 @@ public class SettingsDialog extends JDialog {
         gbc_credentialsChk.gridy = 3;
         proxyPanel.add(credentialsChk, gbc_credentialsChk);
         credentialsChk.addActionListener(e -> {
-            enableApplyButton();
-
             if (credentialsChk.isSelected()) {
+                settingsManager.setProperty(SettingsManager.PROXY_WITH_AUTH,
+                        true);
                 usernameInput.setEnabled(true);
                 passwordInput.setEnabled(true);
             } else {
+                settingsManager.setProperty(SettingsManager.PROXY_WITH_AUTH,
+                        false);
                 usernameInput.setEnabled(false);
                 passwordInput.setEnabled(false);
             }
+
+            enableApplyButton();
         });
 
         usernameLbl = new JLabel("Username");
@@ -199,7 +224,10 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(usernameLbl, gbc_usernameLbl);
 
         usernameInput = new JTextField();
-        usernameInput.setEnabled(false);
+        usernameInput.setEnabled(
+                withProxyRBtn.isSelected() && credentialsChk.isSelected());
+        usernameInput.setText(settingsManager
+                .getProperty(SettingsManager.PROXY_USERNAME, null));
         usernameLbl.setLabelFor(usernameInput);
         GridBagConstraints gbc_usernameInput = new GridBagConstraints();
         gbc_usernameInput.gridwidth = 3;
@@ -209,6 +237,20 @@ public class SettingsDialog extends JDialog {
         gbc_usernameInput.gridy = 4;
         proxyPanel.add(usernameInput, gbc_usernameInput);
         usernameInput.setColumns(10);
+        usernameInput.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                settingsManager.setProperty("proxy.username",
+                        usernameInput.getText());
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+        });
+        usernameInput.getDocument()
+                .addDocumentListener(new SettingsFieldsListener());
 
         passwordLbl = new JLabel("Password");
         GridBagConstraints gbc_passwordLbl = new GridBagConstraints();
@@ -220,7 +262,10 @@ public class SettingsDialog extends JDialog {
         proxyPanel.add(passwordLbl, gbc_passwordLbl);
 
         passwordInput = new JPasswordField();
-        passwordInput.setEnabled(false);
+        passwordInput.setEnabled(
+                withProxyRBtn.isSelected() && credentialsChk.isSelected());
+        passwordInput.setText(settingsManager
+                .getProperty(SettingsManager.PROXY_PASSWORD, null));
         passwordLbl.setLabelFor(passwordInput);
         GridBagConstraints gbc_passwordInput = new GridBagConstraints();
         gbc_passwordInput.gridwidth = 3;
@@ -230,6 +275,20 @@ public class SettingsDialog extends JDialog {
         gbc_passwordInput.gridy = 5;
         proxyPanel.add(passwordInput, gbc_passwordInput);
         passwordInput.setColumns(10);
+        passwordInput.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                settingsManager.setProperty("proxy.password",
+                        String.valueOf(passwordInput.getPassword()));
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+            }
+        });
+        passwordInput.getDocument()
+                .addDocumentListener(new SettingsFieldsListener());
 
         buttonPane = new JPanel();
         buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -246,7 +305,7 @@ public class SettingsDialog extends JDialog {
 
         cancelButton = new JButton("Cancel");
         cancelButton.setActionCommand("Cancel");
-        cancelButton.addActionListener(e -> dispose());
+        cancelButton.addActionListener(e -> discardChanges());
         buttonPane.add(cancelButton);
 
         applyBtn = new JButton("Apply");
@@ -257,15 +316,51 @@ public class SettingsDialog extends JDialog {
         buttonPane.add(applyBtn);
     }
 
+    private void discardChanges() {
+        try {
+            SettingsManager.getInstance().loadSettings();
+            dispose();
+        } catch (IOException e) {
+            LOGGER.severe("Settings could not be reverted: " + e.getMessage());
+        }
+    }
+
     private void enableApplyButton() {
         if (!applyBtn.isEnabled())
             applyBtn.setEnabled(true);
     }
 
     private void saveSettings() {
-        //TODO Set each property and save it to a properties file
+        try {
+            SettingsManager.getInstance().saveSettings();
+
+            if (withProxyRBtn.isSelected())
+                ProxyHelper.enableProxy(credentialsChk.isSelected());
+            else
+                ProxyHelper.disableProxy();
+        } catch (IOException e) {
+            LOGGER.severe("Settings could not be saved: " + e.getMessage());
+        }
+
         if (applyBtn.isEnabled())
             applyBtn.setEnabled(false);
     }
 
+    class SettingsFieldsListener implements DocumentListener {
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            enableApplyButton();
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            enableApplyButton();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            enableApplyButton();
+        }
+    }
 }
