@@ -5,7 +5,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -24,6 +26,7 @@ import javax.swing.JTextField;
 import org.github.juanminm.eba.helpers.AppraisalHelper;
 import org.github.juanminm.eba.helpers.AppraisalHelper.EveApraisalMethod;
 import org.github.juanminm.eba.helpers.JTableHelper;
+import org.github.juanminm.eba.managers.SettingsManager;
 import org.github.juanminm.eba.vo.Item;
 import javax.swing.JLabel;
 import java.awt.Insets;
@@ -35,6 +38,8 @@ import java.awt.Dimension;
 import javax.swing.DefaultComboBoxModel;
 
 public class MainWindow {
+    private static final Logger LOGGER = Logger
+            .getLogger(MainWindow.class.getName());
     private final String EVEPRAISAL_URL = "evepraisalURL";
     private final String ASSETS_PASTE = "assetsPaste";
 
@@ -42,6 +47,12 @@ public class MainWindow {
      * Launch the application.
      */
     public static void main(String[] args) {
+        try {
+            SettingsManager.getInstance().loadSettings();
+        } catch (IOException e) {
+            LOGGER.severe("Settings could not be loaded: " + e.getMessage());
+        }
+
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
