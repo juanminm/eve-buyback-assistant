@@ -105,6 +105,7 @@ public class SettingsDialog extends JDialog {
             settingsManager.setProperty(SettingsManager.PROXY_ENABLED, false);
             hostInput.setEnabled(false);
             portSp.setEnabled(false);
+            credentialsChk.setEnabled(false);
             usernameInput.setEnabled(false);
             passwordInput.setEnabled(false);
         });
@@ -125,8 +126,14 @@ public class SettingsDialog extends JDialog {
             settingsManager.setProperty(SettingsManager.PROXY_ENABLED, true);
             hostInput.setEnabled(true);
             portSp.setEnabled(true);
-            usernameInput.setEnabled(true);
-            passwordInput.setEnabled(true);
+            credentialsChk.setEnabled(true);
+            if (credentialsChk.isSelected()) {
+                usernameInput.setEnabled(true);
+                passwordInput.setEnabled(true);
+            } else {
+                usernameInput.setEnabled(false);
+                passwordInput.setEnabled(false);
+            }
         });
 
         hostLbl = new JLabel("Host");
