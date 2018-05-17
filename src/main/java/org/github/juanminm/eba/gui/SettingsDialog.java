@@ -108,6 +108,11 @@ public class SettingsDialog extends JDialog {
             credentialsChk.setEnabled(false);
             usernameInput.setEnabled(false);
             passwordInput.setEnabled(false);
+            settingsManager.removeProperty(SettingsManager.PROXY_HOST);
+            settingsManager.removeProperty(SettingsManager.PROXY_PORT);
+            settingsManager.removeProperty(SettingsManager.PROXY_WITH_AUTH);
+            settingsManager.removeProperty(SettingsManager.PROXY_USERNAME);
+            settingsManager.removeProperty(SettingsManager.PROXY_PASSWORD);
         });
 
         withProxyRBtn = new JRadioButton("With proxy");
@@ -133,6 +138,8 @@ public class SettingsDialog extends JDialog {
             } else {
                 usernameInput.setEnabled(false);
                 passwordInput.setEnabled(false);
+                settingsManager.removeProperty(SettingsManager.PROXY_USERNAME);
+                settingsManager.removeProperty(SettingsManager.PROXY_PASSWORD);
             }
         });
 
