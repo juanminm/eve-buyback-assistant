@@ -148,7 +148,7 @@ public class SettingsDialog extends JDialog {
         hostInput.setEnabled(withProxyRBtn.isSelected());
         hostLbl.setLabelFor(hostInput);
         hostInput.setText(
-                settingsManager.getProperty(SettingsManager.PROXY_HOST, null));
+                settingsManager.getProperty(SettingsManager.PROXY_HOST, ""));
         GridBagConstraints gbc_hostInput = new GridBagConstraints();
         gbc_hostInput.gridwidth = 2;
         gbc_hostInput.fill = GridBagConstraints.HORIZONTAL;
@@ -234,7 +234,7 @@ public class SettingsDialog extends JDialog {
         usernameInput.setEnabled(
                 withProxyRBtn.isSelected() && credentialsChk.isSelected());
         usernameInput.setText(settingsManager
-                .getProperty(SettingsManager.PROXY_USERNAME, null));
+                .getProperty(SettingsManager.PROXY_USERNAME, ""));
         usernameLbl.setLabelFor(usernameInput);
         GridBagConstraints gbc_usernameInput = new GridBagConstraints();
         gbc_usernameInput.gridwidth = 3;
@@ -272,7 +272,7 @@ public class SettingsDialog extends JDialog {
         passwordInput.setEnabled(
                 withProxyRBtn.isSelected() && credentialsChk.isSelected());
         passwordInput.setText(settingsManager
-                .getProperty(SettingsManager.PROXY_PASSWORD, null));
+                .getProperty(SettingsManager.PROXY_PASSWORD, ""));
         passwordLbl.setLabelFor(passwordInput);
         GridBagConstraints gbc_passwordInput = new GridBagConstraints();
         gbc_passwordInput.gridwidth = 3;
