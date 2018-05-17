@@ -1,5 +1,9 @@
 # Changelog
 ## Unreleased
+### Added
+- Tools menu and its child Settings menu item.
+- SettingsDialog with a yet to fill tabbed pane and some working buttons
+
 ### Changed
 - Modified from `LOGGER.warn` to `LOGGER.severe` in  AppraisalHelper in
 the logging inside a `catch` block.

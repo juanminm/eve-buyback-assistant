@@ -28,6 +28,7 @@ import org.github.juanminm.eba.vo.Item;
 import javax.swing.JLabel;
 import java.awt.Insets;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import java.awt.Dimension;
@@ -79,6 +80,8 @@ public class MainWindow {
     private JSpinner sellBuyMarginSp;
     private JRadioButton sellOrderRb;
     private boolean showBuybackList = false;
+    private JMenu mnTools;
+    private JMenuItem mntmSettings;
 
     /**
      * Create the application.
@@ -318,6 +321,23 @@ public class MainWindow {
         mntmExit = new JMenuItem("Exit");
         mntmExit.addActionListener(new exitApp());
         mnFile.add(mntmExit);
+
+        mnTools = new JMenu("Tools");
+        menuBar.add(mnTools);
+
+        mntmSettings = new JMenuItem("Settings");
+        mnTools.add(mntmSettings);
+        mntmSettings.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SettingsDialog settingDialog = new SettingsDialog();
+                settingDialog.setModal(true);
+                settingDialog
+                        .setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+                settingDialog.setVisible(true);
+            }
+        });
     }
 
     static class exitApp implements ActionListener {
